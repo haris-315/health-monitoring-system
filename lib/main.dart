@@ -364,7 +364,8 @@ class _NotificationOverlayState extends State<NotificationOverlay> {
 }
 
 class HomeScreen extends StatefulWidget {
-  const HomeScreen({super.key});
+  final String name;
+  const HomeScreen({super.key, required this.name});
 
   @override
   State<HomeScreen> createState() => _HomeScreenState();
@@ -423,6 +424,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     ),
                   ),
                   const SizedBox(height: 48),
+
                   _buildFormField(
                     label: 'Gender',
                     value: _selectedSex,
@@ -583,6 +585,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                       'restecg': _selectedRestecg.value,
                                       'exng': _selectedExng.value,
                                       'email': _emailController.text.trim(),
+                                      'name': widget.name,
                                     },
                                   ),
                             ),
@@ -630,33 +633,47 @@ class _HomeScreenState extends State<HomeScreen> {
         ],
         color: Colors.white,
       ),
-      child: DropdownButton<String>(
-        value: value.name,
-        hint: Text(
-          'Select $label',
-          style: const TextStyle(color: Color(0xFF9E9E9E), fontSize: 16),
-        ),
-        isExpanded: true,
-        underline: const SizedBox(),
-        icon: const CircleAvatar(
-          radius: 9,
-          backgroundColor: Color(0xFF6366F1),
-          child: Icon(Icons.arrow_drop_down, color: Colors.white, size: 14),
-        ),
-        items:
-            options.map((Val option) {
-              return DropdownMenuItem<String>(
-                value: option.name,
-                child: Text(
-                  option.name,
-                  style: const TextStyle(
-                    fontSize: 16,
-                    color: Color(0xFF1A1A1A),
-                  ),
-                ),
-              );
-            }).toList(),
-        onChanged: onChanged,
+      child: Column(
+        children: [
+          Align(
+            alignment: Alignment.centerLeft,
+            child: Padding(
+              padding: const EdgeInsets.only(top: 5, bottom: 10),
+              child: Text(
+                label,
+                style: TextStyle(fontWeight: FontWeight.w500, fontSize: 16),
+              ),
+            ),
+          ),
+          DropdownButton<String>(
+            value: value.name,
+            hint: Text(
+              'Select $label',
+              style: const TextStyle(color: Color(0xFF9E9E9E), fontSize: 16),
+            ),
+            isExpanded: true,
+            underline: const SizedBox(),
+            icon: const CircleAvatar(
+              radius: 9,
+              backgroundColor: Color(0xFF6366F1),
+              child: Icon(Icons.arrow_drop_down, color: Colors.white, size: 14),
+            ),
+            items:
+                options.map((Val option) {
+                  return DropdownMenuItem<String>(
+                    value: option.name,
+                    child: Text(
+                      option.name,
+                      style: const TextStyle(
+                        fontSize: 16,
+                        color: Color(0xFF1A1A1A),
+                      ),
+                    ),
+                  );
+                }).toList(),
+            onChanged: onChanged,
+          ),
+        ],
       ),
     );
   }
@@ -1371,7 +1388,7 @@ class _MonitoringPageState extends State<MonitoringPage> {
     return Column(
       children: [
         Text(
-          'Live Health Data',
+          "${widget.patientData['name'] ?? "Guest"}'s Health Data",
           style: TextStyle(
             fontSize: 24,
             fontWeight: FontWeight.w700,
