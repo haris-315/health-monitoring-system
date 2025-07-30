@@ -34,11 +34,17 @@ class _PasscodePageState extends State<PasscodePage> {
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         children: [
           PinDisplay(controller: _controller),
-          CustomNumPad(controller: _controller,onCompleted: () {
-            if (_controller.text == "2098") {
-              Navigator.pushReplacement(context, MaterialPageRoute(builder: (ctx) => HomeScreen()));
-            }
-          },),
+          CustomNumPad(
+            controller: _controller,
+            onCompleted: () {
+              if (_controller.text == "2098") {
+                Navigator.pushReplacement(
+                  context,
+                  MaterialPageRoute(builder: (ctx) => HomeScreen()),
+                );
+              }
+            },
+          ),
         ],
       ),
     );

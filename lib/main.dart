@@ -373,6 +373,8 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreenState extends State<HomeScreen> {
   final TextEditingController _ageController = TextEditingController();
   final TextEditingController _bpController = TextEditingController();
+
+  final TextEditingController _emailController = TextEditingController();
   final TextEditingController _cholController = TextEditingController();
   Val _selectedSex = Gender.Male;
   Val _selectedChestPain = ChestPain.NoPain;
@@ -385,6 +387,7 @@ class _HomeScreenState extends State<HomeScreen> {
     _ageController.dispose();
     _bpController.dispose();
     _cholController.dispose();
+    _emailController.dispose();
     super.dispose();
   }
 
@@ -436,6 +439,12 @@ class _HomeScreenState extends State<HomeScreen> {
                     label: 'Age',
                     controller: _ageController,
                     keyboardType: TextInputType.number,
+                  ),
+                  const SizedBox(height: 24),
+                  _buildTextFormField(
+                    label: 'Email',
+                    controller: _emailController,
+                    keyboardType: TextInputType.emailAddress,
                   ),
                   const SizedBox(height: 24),
                   _buildTextFormField(
@@ -573,6 +582,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                       'fbs': _fbs.value,
                                       'restecg': _selectedRestecg.value,
                                       'exng': _selectedExng.value,
+                                      'email': _emailController.text.trim(),
                                     },
                                   ),
                             ),
@@ -742,11 +752,11 @@ class _MonitoringPageState extends State<MonitoringPage> {
                 _predictionScore = null;
               });
 
-              NotificationService().addNotification(
-                title: 'Prediction Error',
-                message: 'Error processing health data: ${data['error']}',
-                type: NotificationType.warning,
-              );
+              // NotificationService().addNotification(
+              //   title: 'Prediction Error',
+              //   message: 'Error processing health data: ${data['error']}',
+              //   type: NotificationType.warning,
+              // );
             } else {
               final prediction = (data['prediction'] as num).toDouble();
               setState(() {
@@ -775,12 +785,6 @@ class _MonitoringPageState extends State<MonitoringPage> {
               _predictionStatus = 'Data Processing Error';
               _predictionScore = null;
             });
-
-            NotificationService().addNotification(
-              title: 'Data Error',
-              message: 'Failed to process server response',
-              type: NotificationType.warning,
-            );
           }
         },
         onError: (error) {
@@ -789,13 +793,6 @@ class _MonitoringPageState extends State<MonitoringPage> {
             _predictionScore = null;
             _isConnected = false;
           });
-
-          NotificationService().addNotification(
-            title: 'Connection Lost',
-            message:
-                'Lost connection to monitoring server. Attempting to reconnect...',
-            type: NotificationType.warning,
-          );
 
           // Attempt to reconnect after 5 seconds
           Future.delayed(const Duration(seconds: 5), () {
@@ -827,12 +824,6 @@ class _MonitoringPageState extends State<MonitoringPage> {
         _predictionScore = null;
         _isConnected = false;
       });
-
-      NotificationService().addNotification(
-        title: 'Connection Failed',
-        message: 'Unable to connect to monitoring server',
-        type: NotificationType.warning,
-      );
 
       // Attempt to reconnect after 5 seconds
       Future.delayed(const Duration(seconds: 5), () {
@@ -931,6 +922,7 @@ class _MonitoringPageState extends State<MonitoringPage> {
         'restecg': _currentData!['restecg'],
         'exng': _currentData!['exng'],
         'temperature': _currentData!['temperature'],
+        'email': widget.patientData['email'],
         'o2': _currentData!['spo2'],
         'hr': _currentData!['heartRate'],
       };
